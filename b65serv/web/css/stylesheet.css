@@ -1,0 +1,72 @@
+@charset "UTF-8";
+
+
+@font-face {
+    src: url(../fonts/OCRB.ttf);
+    font-family: "OCR B Regular";
+}
+
+* {
+    margin:0;
+    padding:0;
+}
+
+body{
+    width:100%;
+    margin:auto;
+    font-family:monospace;
+}
+
+
+header{
+    border-bottom: 2px solid red;
+    font-family: "OCR B Regular";
+}
+
+main{
+    padding:15px;
+}
+
+
+table{
+    border-collapse: collapse;
+}
+
+th, td{
+    border: 1px solid white;
+    background: #ddd;
+    /*width:48%;*/
+}
+
+.expandcol{
+    /*width:2%;*/
+}
+
+
+/*ul{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width:100%;
+}
+
+li{
+    list-style-type: none;
+    color: #777;
+    margin:auto;
+}*/
+
+h1{
+    font-size:1.2em;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover{
+    color:red;
+}
+

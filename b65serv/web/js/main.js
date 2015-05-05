@@ -9,6 +9,13 @@ var connection;
 var t2;
 
 
+function diff(old, data) {
+    var oldKeys = Object.keys(old);
+
+    for (i in data){};
+
+}
+
 function refresh() {
     if (connection.session != null) {
         connection.session.call("wamp.session.list").then(function (data) {
@@ -20,9 +27,15 @@ function refresh() {
                     addProvider(data[i]);
             }
             for (var i = 0; i < toRemove.length; i++)
-                delProvider(toRemove[i]);
+                delProvider([toRemove[i]]);
         }, connection.session.log);
-        setTimeout(refresh, 5000);
+
+
+        for (var i in providers) {
+            providers[i].refresh();
+        }
+
+        setTimeout(refresh, 250);
     }
 }
 
@@ -42,7 +55,7 @@ function addProvider(obj) {
 function delProvider(key) {
     for (var i = 0; i < key.length; i++) {
         if (key[i] in providers) {
-            providers[key[i]].removeNode();
+            providers[key[i]].erase();
             delete providers[key[i]];
         }
     }
@@ -63,7 +76,7 @@ function onopen(session, details) {
             session.call("wamp.session.get", [data[i]]).then(session.log, session.log);
     }
 
-    t2 = setInterval(function () {
+    /*t2 = setInterval(function () {
         session.call("wamp.registration.list").then(function (data) {
             for (var i = 0; i < data.exact.length; i++) {
                 console.log(data.exact[i]);
@@ -73,7 +86,7 @@ function onopen(session, details) {
 
 
         //session.call("wamp.session.list").then(checksession, session.log)
-    }, 4000);
+    }, 4000);*/
 
     session.subscribe('wamp.session.on_join', addProvider);
 
@@ -107,6 +120,5 @@ $(function () {
         connection.onclose = onclose;
         connection.onopen = onopen;
         connection.open();
-
     }
 );

@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
+from time import sleep
+from twisted.internet.task import LoopingCall
+
 __author__ = 'Antoine Deschênes'
 from autobahn.twisted.wamp import ApplicationSession
 from autobahn.wamp import auth
 from twisted.internet.defer import inlineCallbacks
 
-
 class Session(ApplicationSession):
-    #Nom d'usager pour la connexion
+    def onDisconnect(self):
+        super(Session, self).onDisconnect()
+        self.mainapp.net_session = None
+        print("sessionDisconnect")
+
+    # Nom d'usager pour la connexion
     def onConnect(self):
         self.join(self.config.realm, [u"wampcra"], "provider")
 
@@ -26,10 +33,16 @@ class Session(ApplicationSession):
 
     @inlineCallbacks
     def onJoin(self, details):
+        print("sessionJoin")
+
         self.mainapp = self.config.extra["mainapp"]
+        self.mainapp.net_session = self
 
         "Choses à faire lorsqu'une connexion est réussie"
         yield self.subscribe(self.onjn, 'wamp.session.on_join')
         yield self.subscribe(self.onlv, 'wamp.session.on_leave')
-        yield self.register(self.mainapp.getInfo(), str(details.session) + '.info')
-        #yield self.subscribe()
+        yield self.register(self.mainapp.get_structure, str(self.mainapp.get_name()) + '.structure')
+
+        for service in self.mainapp.services:
+            yield self.register(self.mainapp.services[service].access, str(self.mainapp.get_name())+'.serv.'+str(service))
+

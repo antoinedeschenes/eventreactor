@@ -4,17 +4,16 @@ __author__ = 'Antoine Deschênes'
 import dao.smbus
 from .service import Service
 
-class Temperature(Service):
 
+class Temperature(Service):
     SENSOR_MCP9808 = 0
     SENSOR_TMP007 = 1
 
-    def __init__(self):
-        super(Temperature, self).__init__()
-        self.config["type"]=Service.TYPE_TEMPERATURE
+    def __init__(self, config):
+        super(Temperature, self).__init__(config)
+
         self.readables["temp"] = None
-        self.config["sensorType"]=Temperature.SENSOR_MCP9808
 
     def refresh(self):
-        self.readables["temp"] = dao.smbus.lire("dummy",0x18)
+        self.readables["temp"] = dao.smbus.lire("dummy", 0x18)
 
