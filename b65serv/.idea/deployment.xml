@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" serverName="atlantic">
-    <serverData>
-      <paths name="atlantic">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/b65serv" local="$PROJECT_DIR$" web="" />
-            <mapping deploy="/b65serv/web" local="$PROJECT_DIR$/web" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="cacwww">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/html/test" local="$PROJECT_DIR$" web="/test" />
-          </mappings>
-        </serverdata>
-      </paths>
-    </serverData>
     <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>
