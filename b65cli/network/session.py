@@ -46,3 +46,7 @@ class Session(ApplicationSession):
         for service in self.mainapp.services:
             yield self.register(self.mainapp.services[service].access, str(self.mainapp.get_name())+'.serv.'+str(service))
 
+        for event in self.mainapp.events:
+            yield self.register(self.mainapp.events[event].access,
+                                str(self.mainapp.get_name()) + '.evt.' + str(event))
+

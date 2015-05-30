@@ -4,6 +4,9 @@ var providers = {};
 
 var providerDom;
 
+var servicesNode;
+var eventsNode;
+
 var connection;
 
 var t2;
@@ -35,7 +38,7 @@ function refresh() {
             providers[i].refresh();
         }
 
-        setTimeout(refresh, 250);
+        setTimeout(refresh, 4000);
     }
 }
 
@@ -76,20 +79,7 @@ function onopen(session, details) {
             session.call("wamp.session.get", [data[i]]).then(session.log, session.log);
     }
 
-    /*t2 = setInterval(function () {
-        session.call("wamp.registration.list").then(function (data) {
-            for (var i = 0; i < data.exact.length; i++) {
-                console.log(data.exact[i]);
-                session.call("wamp.registration.list_callees", [data.exact[i]]).then(session.log, session.log);
-            }
-        }, session.log);
-
-
-        //session.call("wamp.session.list").then(checksession, session.log)
-    }, 4000);*/
-
     session.subscribe('wamp.session.on_join', addProvider);
-
     session.subscribe('wamp.session.on_leave', delProvider);
 
     refresh();
@@ -108,7 +98,9 @@ function onclose(reason, details) {
 $(function () {
         console.log("hi");
 
-        providerDom = document.getElementById("providers");
+        //providerDom = document.getElementById("providers");
+        servicesNode = $('#services');
+        eventsNode = $('#events');
 
         connection = new autobahn.Connection({
             url: wsuri,

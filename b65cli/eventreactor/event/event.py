@@ -41,4 +41,5 @@ class Event(object):
             self.last_state = new_state
 
 
-
+    def access(self):
+        return self.condition

@@ -1,48 +1,54 @@
 @charset "UTF-8";
 
-
 @font-face {
     src: url(../fonts/OCRB.ttf);
     font-family: "OCR B Regular";
 }
 
 * {
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
 }
 
-body{
-    width:100%;
-    margin:auto;
-    font-family:monospace;
-    font-size:1em;
+body {
+    width: 100%;
+    margin: auto;
+    font-family: monospace;
+    font-size: 1em;
 }
 
-
-header{
+header {
     border-bottom: 2px solid red;
     font-family: "OCR B Regular";
 }
 
-main{
-    padding:15px;
+main {
+    padding: 15px;
 }
 
-
-table{
+table {
     border-collapse: collapse;
+    width: 100%;
+    max-width: 960px;
 }
 
-th, td{
+th, td {
     border: 1px solid white;
     background: #ddd;
     /*width:48%;*/
 }
 
-.expandcol{
-    /*width:2%;*/
+th:first-of-type {
+    width: 15px;
 }
 
+td {
+    text-align: center;
+}
+
+.expandcol {
+    /*width:2%;*/
+}
 
 /*ul{
     display: flex;
@@ -50,24 +56,24 @@ th, td{
     flex-wrap: wrap;
     justify-content: space-between;
     width:100%;
-}
-
-li{
-    list-style-type: none;
-    color: #777;
-    margin:auto;
 }*/
 
-h1{
-    font-size:1.2em;
+li {
+    list-style-type: none;
+    color: #777;
+    margin: auto;
 }
 
-a{
+h1 {
+    font-size: 1.2em;
+}
+
+a {
     text-decoration: none;
     color: inherit;
 }
 
-a:hover{
-    color:red;
+a:hover {
+    color: red;
 }
 
