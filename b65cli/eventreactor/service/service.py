@@ -6,6 +6,7 @@ class Service(object):
     TYPE_GPIO = 1
     TYPE_TEMPERATURE = 2
     TYPE_THERMOELECTRIC = 3
+    TYPE_TIMECLOCK = 4
 
     def __init__(self, config):
         self.readables = dict()

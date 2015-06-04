@@ -13,7 +13,10 @@ from eventreactor.helper import Helper
 
 class Provider(object):
     def __init__(self):
-        self.name = os.uname()[1]
+        try:
+            self.name = os.uname()[1]
+        except Exception:
+            self.name = os.getenv('COMPUTERNAME')
         self.helper = Helper(self)
         self.services = dict()
         self.events = dict()
@@ -50,7 +53,10 @@ class Provider(object):
         elif type == Service.TYPE_THERMOELECTRIC:
             from eventreactor.service.thermoelectric import Thermoelectric
             self.services[name] = Thermoelectric(config)
-
+        elif type == Service.TYPE_TIMECLOCK:
+            from eventreactor.service.timeclock import Timeclock
+            self.services[name] = Timeclock(config)
+            
     def delService(self, name):
         self.net_session.unregister(self.name + '.serv.' + name)
         del self.services[name]
