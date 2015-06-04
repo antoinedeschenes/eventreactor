@@ -1,0 +1,10 @@
+
+La librairie Autobahn s'installe sur Windows. Il est donc possible d'utiliser le logiciel client sous Windows.
+
+On utilise
+python 2.7 32-bit
+
+Ensuite installer le gestionnaire de librairies pip
+https://bootstrap.pypa.io/get-pip.py
+
+pip install autobahn[twisted]
