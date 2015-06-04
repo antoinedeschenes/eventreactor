@@ -27,30 +27,28 @@ class Factory(WampWebSocketClientFactory, ReconnectingClientFactory):
         self.autoPingInterval = 10.0
         self.autoPingTimeout = 3.0
         self.protocol = Protocol
-        print(self.protocol)
-
 
     def startedConnecting(self, connector):
         "Appel sur tentative de connexion"
         # self.mainapp.connexionTentative()
-        print("factoryStartedConnecting")
+        #print("factoryStartedConnecting")
         return ReconnectingClientFactory.startedConnecting(self, connector)
 
     def clientConnectionFailed(self, connector, reason):
         "Appel sur échec de tentative"
         #self.mainapp.connexion_echec()
-        print("factoryClientConnectionFailed")
+        #print("factoryClientConnectionFailed")
         return ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
 
     def clientConnectionLost(self, connector, reason):
         "Appel lorsque la connexion est perdue"
         #self.mainapp.connexion_perdue()
-        print("factoryClientConnectionLost")
+        #print("factoryClientConnectionLost")
         return ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
     def buildProtocol(self, addr):
         "Appel lorsque la tentative réussit à se connecter"
         self.resetDelay()  # Remettre le délai entre les tentatives à zéro
         #self.mainapp.connexionReussie()
-        print("factoryBuildProtocol")
+        #print("factoryBuildProtocol")
         return ReconnectingClientFactory.buildProtocol(self, addr)

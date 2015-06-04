@@ -1,23 +1,34 @@
 var wsuri = "ws://a.antoinedeschenes.com:8080/ws";
 
 var providers = {};
-
-var providerDom;
-
 var servicesNode;
 var eventsNode;
 
 var connection;
 
-var t2;
+var configdict = {
+    type: {
+        1: 'I/O pin',
+        2: 'Thermometer',
+        3: 'Thermoelectric plate'
+    },
+    mode: {
+        I: 'Input',
+        O: 'Output'
+    },
+    sensorType: {
+        0: 'MCP9808 (direct)',
+        1: 'TMP007 (IR)'
+    }
+};
 
-
-function diff(old, data) {
-    var oldKeys = Object.keys(old);
-
-    for (i in data){};
-
-}
+var suffixdict = {
+    temp: "°C",
+    power: " W",
+    voltage: " V",
+    current: " A",
+    duty: " %"
+};
 
 function refresh() {
     if (connection.session != null) {
@@ -38,7 +49,7 @@ function refresh() {
             providers[i].refresh();
         }
 
-        setTimeout(refresh, 4000);
+        setTimeout(refresh, 100);
     }
 }
 
@@ -69,36 +80,29 @@ function onchallenge(session, method, extra) {
     //if (method === "wampcra")
     console.log("challenge accepted");
     return autobahn.auth_cra.sign("secret", extra.challenge);
-};
+}
 
 function onopen(session, details) {
     console.log("Connected");
 
-    function checksession(data) {
-        for (var i = 0; i < data.length; i++)
-            session.call("wamp.session.get", [data[i]]).then(session.log, session.log);
-    }
+    /*function checksession(data) {
+     for (var i = 0; i < data.length; i++)
+     session.call("wamp.session.get", [data[i]]).then(session.log, session.log);
+     }*/
 
     session.subscribe('wamp.session.on_join', addProvider);
     session.subscribe('wamp.session.on_leave', delProvider);
 
     refresh();
-};
+}
 
 function onclose(reason, details) {
     console.log("Connection lost: " + reason);
-    if (t2) {
-        clearInterval(t2);
-        t2 = null;
-    }
-};
+}
 
 
 //Onload
 $(function () {
-        console.log("hi");
-
-        //providerDom = document.getElementById("providers");
         servicesNode = $('#services');
         eventsNode = $('#events');
 

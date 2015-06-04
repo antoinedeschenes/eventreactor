@@ -4,49 +4,51 @@ function Service(parent, name) {
     this.node = $('<tr>').appendTo(servicesNode);
     $('<td>').text(parent.name + '.' + name).appendTo(this.node);
 
-    var nametd = $('<td>').appendTo(this.node);
-    this.readablesNode = $('<ul>').appendTo(nametd);
-    var valuetd = $('<td>').appendTo(this.node);
-    this.valuesNode = $('<ul>').appendTo(valuetd);
-
-    //this.node.onclick = function() {servicenode.expandtree()};
-    //this.node.appendChild(document.createTextNode(this.name));
-    //this.expand = false;
+    var td = $('<td>').appendTo(this.node);
+    this.configsNode = $('<ul>').appendTo(td);
+    td = $('<td>').appendTo(this.node);
+    this.readablesNode = $('<ul>').appendTo(td);
 
 
-    this.readables = {};
     this.values = {};
-    //this.readablesNode = document.createElement("ul");
-    //this.node.appendChild(this.readablesNode);
-    //this.parent.serviceNode.appendChild(this.node);
+    this.config = {};
+
     this.refresh();
-
-
 }
 
-Service.prototype.expandtree = function () {
-    this.expand = !this.expand;
-}
 
 Service.prototype.refresh = function () {
-    //if (this.expand) {
-        var service = this;
-        connection.session.call(this.parent.name + ".serv." + this.name).then(function (data) {
-            console.log(data);
-            for (var key in data) {
-                if (!(key in service.readables)) {
-                    service.readables[key] = $('<li>').text(key).appendTo(service.readablesNode);
-                    service.values[key] = $('<li>').appendTo(service.valuesNode);
-                    //service.readablesNode.appendChild(service.readables[key]);
-                }
-                service.values[key].text(data[key]);
-            }
-        });
-    //}
-}
+    var caller = this;
+    connection.session.call(this.parent.name + ".serv." + this.name).then(function (data) {
+        for (var key in data.config) {
+            if (!(key in caller.config))
+                caller.config[key] = $('<li>').appendTo(caller.configsNode);
+
+            var configvalue = data.config[key];
+            if (key in configdict)
+                configvalue = configdict[key][configvalue];
+            caller.config[key].text(key + ": " + configvalue);
+        }
+    });
+    this.refreshReadings();
+};
+
+Service.prototype.refreshReadings = function() {
+    var caller = this;
+    connection.session.call(this.parent.name + ".serv." + this.name).then(function (data) {
+        for (var key in data.values) {
+            if (!(key in caller.values))
+                caller.values[key] = $('<li>').appendTo(caller.readablesNode);
+            var readingvalue = data.values[key];
+            if (key in suffixdict)
+                readingvalue += suffixdict[key];
+            caller.values[key].text(key + ": " + readingvalue);
+        }
+    });
+};
+
 
 Service.prototype.erase = function () {
-    //this.parent.serviceNode.removeChild(this.node);
     this.node.remove();
     this.node = undefined;
-}
+};

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
+from twisted.internet import reactor
+from twisted.internet.defer import inlineCallbacks
 
 __author__ = 'Antoine Deschênes'
 
 import os
+import json
 
-from eventreactor.service.gpio import GPIO
 from eventreactor.service.service import Service
-from eventreactor.service.temperature import Temperature
 from eventreactor.event.event import Event
 from eventreactor.helper import Helper
-
 
 class Provider(object):
     def __init__(self):
@@ -19,27 +19,12 @@ class Provider(object):
         self.events = dict()
         self.net_session = None
 
-        self.initConf = \
-            {
-                "events":{
-                    "tempcheck":{
-                        "condition":"[raspberrypi21.monThermometre.temp] > 25",
-                        "onTrue":{"raspberrypi21.out21.state":1},
-                        "onFalse":{"raspberrypi21.out21.state":0}
-                    }
-                },
-                "services":{
-                    "monThermometre":{"type":Service.TYPE_TEMPERATURE,
-                                      "sensorType":Temperature.SENSOR_MCP9808},
-                    "in23":{"type":Service.TYPE_GPIO,
-                            "mode":GPIO.GPIO_INPUT,
-                            "pin":23},
-                    "out21":{"type":Service.TYPE_GPIO,
-                             "mode":GPIO.GPIO_OUTPUT,
-                             "pin":21}
-                }
-            }
+        self.initConf = {}
+        with open(self.name + '.conf', 'r') as configfile:
+            self.initConf = json.loads(configfile.read())
 
+        #with open('raspberrypi21.conf', 'w') as f:
+        #    f.write(json.dumps(self.initConf, sort_keys=True, indent=4, separators=(',', ': ')))
 
         for service in self.initConf["services"].keys():
             self.addService(service,self.initConf["services"][service])
@@ -47,39 +32,29 @@ class Provider(object):
         for event in self.initConf["events"].keys():
             self.addEvent(event, self.initConf["events"][event])
 
-        #self.services["monThermometre"] = Temperature()
-        #self.services["in23"] = GPIO(23, GPIO.GPIO_INPUT)
-        #self.services["out21"] = GPIO(21, GPIO.GPIO_OUTPUT)
-
-        #self.events["tempcheck"]= Event(self)
-        print("EventReactor provider init")
+        #print("EventReactor provider init")
 
     def addEvent(self, name, config):
         self.events[name] = Event(self, config)
 
     def addService(self, name, config):
+        #Ajouter le service approprié et importer seulement quand nécessaire.
+        #Python ne s'occupe pas des importations dupliquées.
         type = config["type"]
         if type == Service.TYPE_GPIO:
+            from eventreactor.service.gpio import GPIO
             self.services[name] = GPIO(config)
         elif type == Service.TYPE_TEMPERATURE:
+            from eventreactor.service.temperature import Temperature
             self.services[name] = Temperature(config)
+        elif type == Service.TYPE_THERMOELECTRIC:
+            from eventreactor.service.thermoelectric import Thermoelectric
+            self.services[name] = Thermoelectric(config)
 
     def delService(self, name):
         self.net_session.unregister(self.name + '.serv.' + name)
         del self.services[name]
         pass
-
-
-    # Placeholders
-    def connexion_echec(self):
-        print("Failed connection attempt")
-    def connexion_perdue(self):
-        print("Lost connection")
-    def connexionReussie(self):
-        print("connect successful")
-    def connexionTentative(self):
-        print("attempt")
-
 
     def get_name(self):
         return self.name
@@ -89,8 +64,18 @@ class Provider(object):
                 "events":self.events.keys()}
 
     def refresh(self):
+        #Rafraîchissement des services
         for service in self.services:
-            self.services[service].refresh()
+            try:
+                self.services[service].refresh()
+            except Exception as e:
+                print(e.message)
+
         for event in self.events:
-            self.events[event].refresh()
+            try:
+                self.events[event].refresh()
+            except Exception as e:
+                print(e.message)
+
+        reactor.callLater(0.15, self.refresh)
 

@@ -5,7 +5,7 @@ __author__ = 'Antoine Deschênes'
 class Service(object):
     TYPE_GPIO = 1
     TYPE_TEMPERATURE = 2
-    TYPE_THERMOPLATE = 3
+    TYPE_THERMOELECTRIC = 3
 
     def __init__(self, config):
         self.readables = dict()
@@ -14,7 +14,7 @@ class Service(object):
 
     def access(self, attribute=None, value=None):
         if attribute is None:
-            return self.readables
+            return { 'values':self.readables, 'config':self.config}
         elif value is None:
             return self.readables[attribute]
         else:

@@ -8,7 +8,6 @@ import sys
 from autobahn.twisted import websocket
 from autobahn.wamp.types import ComponentConfig
 from twisted.internet import reactor
-from twisted.internet.task import LoopingCall
 from twisted.python import log
 
 from eventreactor.provider import Provider
@@ -18,17 +17,16 @@ from network.session import Session
 if __name__ == '__main__':
     "Initialiser l'application"
 
-    # configuration de test
-    config = {}
-
-    #L'application entant que telle
-
+    # Instance de l'objet qui gère les services
     provider = Provider()
 
+    #Paramètres de base pour la connexion
     url = "ws://a.antoinedeschenes.com:8080/ws"
     realm = "realm1"
-    extra = {'mainapp': provider}  # config a passer à la session
+    # Donner un accès au gestionnaire de services à la session websocket
+    extra = {'mainapp': provider}
 
+    # Options de débogage
     debug = False
     debug_app = False
     debug_wamp = False
@@ -36,9 +34,11 @@ if __name__ == '__main__':
         log.startLogging(sys.stdout)
 
     #Boucle de rafraichissement logiciel
-    boucle = LoopingCall(provider.refresh)
-    boucle.start(0.1)
+    #boucle = LoopingCall(provider.refresh)
+    #boucle.start(0.25)
+    reactor.callLater(0.5,provider.refresh)
 
+    #On doit fournir une factory de 'session' au service de websocket
     def factory():
         session = Session(ComponentConfig(realm, extra))
         session.debug_app = debug_app
@@ -49,11 +49,12 @@ if __name__ == '__main__':
                                 url=url,
                                 debug=debug,
                                 debug_wamp=debug_wamp,
-                                headers={"hostname": os.uname()[1]})
+                                headers={"hostname": provider.get_name()})
 
-    transport_factory.setProtocolOptions(autoPingInterval=10.0, autoPingTimeout=3.0)
-    transport_factory.setProtocolOptions()
+    transport_factory.setProtocolOptions(autoPingInterval=10.0, autoPingTimeout=5.0)
     websocket.connectWS(transport_factory)
 
+    #Démarrer la boucle d'événements
     reactor.run()
 
+    print('Bye')

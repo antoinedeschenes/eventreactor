@@ -11,7 +11,7 @@ class Session(ApplicationSession):
     def onDisconnect(self):
         super(Session, self).onDisconnect()
         self.mainapp.net_session = None
-        print("sessionDisconnect")
+        #print("sessionDisconnect")
 
     # Nom d'usager pour la connexion
     def onConnect(self):
@@ -24,23 +24,25 @@ class Session(ApplicationSession):
 
     #Connexion d'un autre usager
     def onjn(self, msg):
-        print(msg)
-        print(msg["authrole"])
+        #print(msg)
+        #print(msg["authrole"])
+        pass
 
     #Deconnexion d'un autre usager
     def onlv(self, msg):
-        print(msg)
+        #print(msg)
+        pass
 
     @inlineCallbacks
     def onJoin(self, details):
-        print("sessionJoin")
+        #print("sessionJoin")
 
         self.mainapp = self.config.extra["mainapp"]
         self.mainapp.net_session = self
 
         "Choses à faire lorsqu'une connexion est réussie"
-        yield self.subscribe(self.onjn, 'wamp.session.on_join')
-        yield self.subscribe(self.onlv, 'wamp.session.on_leave')
+        #yield self.subscribe(self.onjn, 'wamp.session.on_join')
+        #yield self.subscribe(self.onlv, 'wamp.session.on_leave')
         yield self.register(self.mainapp.get_structure, str(self.mainapp.get_name()) + '.structure')
 
         for service in self.mainapp.services:

@@ -3,15 +3,12 @@ __author__ = 'Antoine Deschênes'
 
 import atexit as __atexit
 import RPi.GPIO as __gpiolib
-#import eventreactor.service.gpio as __gpioservice
 
 # Ouvrir le GPIO à l'importation - module singleton
 __gpiolib.setmode(__gpiolib.BCM)
 
 # Libérer les GPIO à la fermeture
 __atexit.register(__gpiolib.cleanup)
-
-print("dao.gpio loaded")
 
 GPIO_INPUT = 'I'
 GPIO_OUTPUT = 'O'

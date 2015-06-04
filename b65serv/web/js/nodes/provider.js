@@ -1,36 +1,16 @@
 function Provider(name) {
     this.name = name;
-    //this.node = document.createElement("tr");
-    //this.expand = false;
 
-    var provider = this; //Faire avec les problèmes de namespace...
+    var caller = this; //Faire avec les problèmes de namespace...
 
-    /*this.expandCell = document.createElement("td");
-     this.expandCell.innerText = "+";
-     this.expandCell.className = "expandcol";
-     this.expandCell.onclick=function() {provider.expandtree()};
-     this.node.appendChild(this.expandCell);
-
-     var nameCell = document.createElement("td");
-     nameCell.innerText = this.name;
-
-     this.node.appendChild(nameCell);
-     providerDom.appendChild(this.node);*/
-
-    //this.serviceNode = document.createElement("div");
-    //this.node.appendChild(this.serviceNode);
-    //this.eventNode = document.createElement("div");
-    //this.node.appendChild(this.eventNode);
     this.services = {};
     this.events = {};
-    this.refresh();
 
-    //console.log(this);
+    setTimeout(function(){caller.refresh();},500);
 }
 
 
 Provider.prototype.refresh = function () {
-    //if(this.expand){
     var provider = this;
     connection.session.call(this.name + ".structure", []).then(function (structure) {
             var services = structure["services"]
@@ -64,43 +44,12 @@ Provider.prototype.refresh = function () {
     );
 
     for (var key in this.services) {
-        this.services[key].refresh();
+        this.services[key].refreshReadings();
     }
 
-}
-
-
-/*Provider.prototype.expandtree = function() {
- this.expand = !this.expand;
-
- if (!this.expand){
- this.expandCell.innerText = '+';
- servkeys = Object.keys(this.services);
- evtkeys = Object.keys(this.events);
-
- for (var i = 0; i < servkeys.length; i++) {
- console.log(this.services);
- this.services[servkeys[i]].erase();
- delete this.services[servkeys[i]];
- }
-
- console.log(this.events);
-
- for (var i = 0; i < evtkeys.length; i++) {
- console.log(this.events[evtkeys[i]]);
- this.events[evtkeys[i]].erase();
- delete this.events[evtkeys[i]];
- }
-
- } else{
- this.expandCell.innerText = '-';
- this.refresh();
- }
- };*/
+};
 
 Provider.prototype.erase = function () {
-    //console.log("Delete node");
-    //providerDom.removeChild(this.node);
     for (var i in this.services) {
         this.services[i].erase();
     }
