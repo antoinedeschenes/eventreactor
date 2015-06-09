@@ -1,34 +1,15 @@
-var wsuri = "ws://a.antoinedeschenes.com:8080/ws";
+//Au chargement de la page, paramétrer les variables globales.
+$(function () {
+        servicesNode = $('#services');
+        serviceEditNode = $('#service-edit');
+        eventsNode = $('#events');
+        eventEditNode = $('#event-edit');
 
-var providers = {};
-var servicesNode;
-var eventsNode;
-
-var connection;
-
-var configdict = {
-    type: {
-        1: 'I/O pin',
-        2: 'Thermometer',
-        3: 'Thermoelectric plate'
-    },
-    mode: {
-        I: 'Input',
-        O: 'Output'
-    },
-    sensorType: {
-        0: 'MCP9808 (direct)',
-        1: 'TMP007 (IR)'
+        connection = getConnection();
+        connection.open();
     }
-};
+);
 
-var suffixdict = {
-    temp: "°C",
-    power: " W",
-    voltage: " V",
-    current: " A",
-    duty: " %"
-};
 
 function refresh() {
     if (connection.session != null) {
@@ -46,26 +27,30 @@ function refresh() {
 
 
         for (var i in providers) {
-            providers[i].refresh();
+            providers[i].refreshReadings();
         }
 
-        setTimeout(refresh, 100);
+        setTimeout(refresh, 250);
     }
 }
 
+//Ajoute un noeud fournisseur de service
 function addProvider(obj) {
-    if (typeof obj == 'number') {
+    if (typeof obj == 'number') { //Chercher l'objet session au complet si on ne reçoit que la clé
         connection.session.call("wamp.session.get", [obj]).then(function (data) {
             addProvider([data]);
         }, connection.session.log);
     }
-    else {
+    else { //Créer un objet provider correspondant aux informations reçues
         for (var i = 0; i < obj.length; i++)
-            if (obj[i].authrole == "provider")
-                providers[obj[i].session] = new Provider(obj[i].transport.http_headers_received.hostname);
+            if (obj[i].authrole == "provider") { // Vérifier que le client connecté n'est pas une autre page web
+                var hostname = obj[i].transport.http_headers_received.hostname;
+                providers[obj[i].session] = new Provider(hostname, obj[i].session);
+            }
     }
 }
 
+//Efface un noeud fournisseur de service
 function delProvider(key) {
     for (var i = 0; i < key.length; i++) {
         if (key[i] in providers) {
@@ -75,46 +60,3 @@ function delProvider(key) {
     }
 }
 
-//Retourner le mot de passe pour l'authentification
-function onchallenge(session, method, extra) {
-    //if (method === "wampcra")
-    console.log("challenge accepted");
-    return autobahn.auth_cra.sign("secret", extra.challenge);
-}
-
-function onopen(session, details) {
-    console.log("Connected");
-
-    /*function checksession(data) {
-     for (var i = 0; i < data.length; i++)
-     session.call("wamp.session.get", [data[i]]).then(session.log, session.log);
-     }*/
-
-    session.subscribe('wamp.session.on_join', addProvider);
-    session.subscribe('wamp.session.on_leave', delProvider);
-
-    refresh();
-}
-
-function onclose(reason, details) {
-    console.log("Connection lost: " + reason);
-}
-
-
-//Onload
-$(function () {
-        servicesNode = $('#services');
-        eventsNode = $('#events');
-
-        connection = new autobahn.Connection({
-            url: wsuri,
-            realm: "realm1",
-            authmethods: ["wampcra"],
-            authid: "manager",
-            onchallenge: onchallenge
-        });
-        connection.onclose = onclose;
-        connection.onopen = onopen;
-        connection.open();
-    }
-);

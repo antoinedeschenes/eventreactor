@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Antoine Deschênes'
 
-import os
 import sys
 
 from autobahn.twisted import websocket
@@ -23,6 +22,7 @@ if __name__ == '__main__':
     #Paramètres de base pour la connexion
     url = "ws://a.antoinedeschenes.com:8080/ws"
     realm = "realm1"
+
     # Donner un accès au gestionnaire de services à la session websocket
     extra = {'mainapp': provider}
 
@@ -33,10 +33,9 @@ if __name__ == '__main__':
     if debug or debug_app or debug_wamp:
         log.startLogging(sys.stdout)
 
-    #Boucle de rafraichissement logiciel
-    #boucle = LoopingCall(provider.refresh)
-    #boucle.start(0.25)
-    reactor.callLater(0.5,provider.refresh)
+    #Boucle de rafraîchissement du logiciel
+    reactor.callLater(1.0,provider.refresh_services)
+    reactor.callLater(1.0,provider.refresh_events)
 
     #On doit fournir une factory de 'session' au service de websocket
     def factory():
@@ -57,4 +56,4 @@ if __name__ == '__main__':
     #Démarrer la boucle d'événements
     reactor.run()
 
-    print('Bye')
+    print('Exit')

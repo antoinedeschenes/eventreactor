@@ -13,4 +13,7 @@ class Temperature(Service):
         self.readables["temp"] = None
 
     def refresh(self):
-        self.readables["temp"] = round(dao.smbus.lire(self.config['sensorType'], self.config['address']),2)
+        try:
+            self.readables["temp"] = round(dao.smbus.lire(self.config['sensorType'], self.config['address']),3)
+        except:
+            pass

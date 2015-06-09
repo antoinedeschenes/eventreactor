@@ -19,15 +19,21 @@ class Helper(object):
             oldvalue = "[" + str(serv) + "]"
             newvalue = None
             if s[0] == self.provider.name:
-                newvalue = self.provider.services[s[1]].access(s[2])
+                try:
+                    newvalue = self.provider.services[s[1]].access(s[2])
+                except Exception:
+                    pass
             elif self.provider.net_session:
-                newvalue = yield self.provider.net_session.call(s[0]+ '.serv.' +s[1], s[2])
+                try:
+                    newvalue = yield self.provider.net_session.call(s[0]+ '.serv.' +s[1], s[2])
+                except Exception:
+                    pass
 
             condition = condition.replace(oldvalue, str(newvalue))
 
         condition = "(" + str(condition) + ")"
         try:
-            retour = eval(condition, {"__builtins__": None}, {"abs": abs})
+            retour = eval(condition, {"__builtins__": None}, {"abs": abs, "round": round, "min":min, "max":max})
         except:
             retour = None
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-
 __author__ = 'Antoine Deschênes'
+
 from autobahn.twisted.websocket import WampWebSocketClientFactory
 from twisted.internet.protocol import ReconnectingClientFactory
 from network.protocol import Protocol
@@ -28,23 +28,23 @@ class Factory(WampWebSocketClientFactory, ReconnectingClientFactory):
         self.autoPingTimeout = 3.0
         self.protocol = Protocol
 
-    def startedConnecting(self, connector):
-        "Appel sur tentative de connexion"
-        # self.mainapp.connexionTentative()
-        #print("factoryStartedConnecting")
-        return ReconnectingClientFactory.startedConnecting(self, connector)
-
-    def clientConnectionFailed(self, connector, reason):
-        "Appel sur échec de tentative"
-        #self.mainapp.connexion_echec()
-        #print("factoryClientConnectionFailed")
-        return ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
-
-    def clientConnectionLost(self, connector, reason):
-        "Appel lorsque la connexion est perdue"
-        #self.mainapp.connexion_perdue()
-        #print("factoryClientConnectionLost")
-        return ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
+    # def startedConnecting(self, connector):
+    #     "Appel sur tentative de connexion"
+    #     # self.mainapp.connexionTentative()
+    #     #print("factoryStartedConnecting")
+    #     return ReconnectingClientFactory.startedConnecting(self, connector)
+    #
+    # def clientConnectionFailed(self, connector, reason):
+    #     "Appel sur échec de tentative"
+    #     #self.mainapp.connexion_echec()
+    #     #print("factoryClientConnectionFailed")
+    #     return ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
+    #
+    # def clientConnectionLost(self, connector, reason):
+    #     "Appel lorsque la connexion est perdue"
+    #     #self.mainapp.connexion_perdue()
+    #     #print("factoryClientConnectionLost")
+    #     return ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
     def buildProtocol(self, addr):
         "Appel lorsque la tentative réussit à se connecter"

@@ -45,7 +45,6 @@ def close():
 def __call(command):
     'Appels sur port série et retour.'
     try:
-        print command,
         connect()
         __comm.flush()
         __comm.write(command + '\r')
@@ -57,13 +56,12 @@ def __call(command):
 
         if len(output) == 0:
             raise Exception('InvalidCommandOrDelayTooShort')
-            #off()  # Erreur -> éteindre sortie
+
         else:
             output = output.replace('\r', '')[:-2]
-        print output
+
     except Exception as e:
         output = None
-        print e
 
     return output
 

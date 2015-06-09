@@ -12,8 +12,5 @@ class Timeclock(Service):
         self.readables["time"] = None
 
     def refresh(self):
-        self.readables["time"] = time.time()
-
-    def cleanup(self):
-        pass
+        self.readables["time"] = round(time.time(), 2)
 

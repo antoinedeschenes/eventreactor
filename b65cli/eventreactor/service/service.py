@@ -7,6 +7,7 @@ class Service(object):
     TYPE_TEMPERATURE = 2
     TYPE_THERMOELECTRIC = 3
     TYPE_TIMECLOCK = 4
+    TYPE_VARIABLE = 5
 
     def __init__(self, config):
         self.readables = dict()
@@ -25,5 +26,6 @@ class Service(object):
     def refresh(self):
         pass
 
-
+    def cleanup(self):
+        pass
 

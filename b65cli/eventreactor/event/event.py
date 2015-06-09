@@ -9,46 +9,83 @@ from eventreactor.event.reaction import Reaction
 class Event(object):
     def __init__(self, provider, config):
         self.provider = provider
-        self.last_state = None
         self.config = {
-            "condition":None,
-            "onTrue":[],
-            "onFalse":[]
+            "condition": None,
+            "onTrue": {},
+            "onFalse": {},
+            "lastState": None
         }
         self.onTrue = []
         self.onFalse = []
         self.configure(config)
 
+    def configure(self, new_config):
 
-    def configure(self, config):
-        self.config = config
-        self.onTrue = []
-        for reaction in config["onTrue"]:
-            self.onTrue.append(Reaction(self.provider, reaction, config["onTrue"][reaction]))
+        # Pour appliquer les réactions créées après que l'événement se soit produit
+        execute_reaction = self.config["lastState"]
 
-        self.onFalse = []
-        for reaction in config["onFalse"]:
-            self.onFalse.append(Reaction(self.provider, reaction, config["onFalse"][reaction]))
+        if "condition" in new_config:
+            self.config["condition"] = new_config["condition"]
+
+        #Chercher les attributs modifié et les supprimer. La création se fait plus tard
+        if "onTrue" in new_config:
+            for attribute in self.config["onTrue"].keys():
+                if attribute in new_config["onTrue"]:
+                    if new_config["onTrue"][attribute] != self.config["onTrue"][attribute]:
+                        # Une valeur différente efface la réaction.
+                        del self.config["onTrue"][attribute]
+                        for reaction_object in self.onTrue:
+                            if reaction_object.service_attribute == attribute:
+                                self.onTrue.remove(reaction_object)
+
+            # Nouvelle réaction à créer si cet attribut n'existait pas. Un None est une suppression, à ignorer.
+            for attribute in new_config["onTrue"]:
+                if attribute not in self.config["onTrue"] and new_config["onTrue"][attribute] is not None:
+                    self.config["onTrue"][attribute] = new_config["onTrue"][attribute]
+                    self.onTrue.append(
+                        Reaction(self.provider, attribute, self.config["onTrue"][attribute], execute_reaction))
+
+
+        #Même chose pour onFalse
+        if "onFalse" in new_config:
+            for attribute in self.config["onFalse"].keys():
+                if attribute in new_config["onFalse"]:
+                    if new_config["onFalse"][attribute] != self.config["onFalse"][attribute]:
+                        del self.config["onFalse"][attribute]
+                        for reaction_object in self.onFalse:
+                            if reaction_object.service_attribute == attribute:
+                                self.onFalse.remove(reaction_object)
+
+            #Répéter pour onFalse
+            for attribute in new_config["onFalse"]:
+                if attribute not in self.config["onFalse"] and new_config["onFalse"][attribute] is not None:
+                    self.config["onFalse"][attribute] = new_config["onFalse"][attribute]
+                    self.onFalse.append(Reaction(self.provider, attribute, self.config["onFalse"][attribute], not execute_reaction))
+
+        #Configuration à garder dans le fichier. lastState n'est pas utile.
+        output_config = self.config.copy()
+        del output_config["lastState"]
+        return output_config
 
     @inlineCallbacks
     def refresh(self):
         new_state = yield self.provider.helper.parsecondition(self.config["condition"])
 
-        if (self.last_state is None and new_state is not None) or self.last_state != new_state:
+        if (self.config["lastState"] is None and new_state is not None) or self.config["lastState"] != new_state:
             if new_state is True:
                 for reaction in self.onTrue:
                     try:
                         reaction.execute()
                     except Exception as e:
                         print(e.message)
-            else:
+            elif new_state is False:
                 for reaction in self.onFalse:
                     try:
                         reaction.execute()
                     except Exception as e:
                         print(e.message)
 
-            self.last_state = new_state
+            self.config["lastState"] = new_state
 
     def access(self):
         return self.config
