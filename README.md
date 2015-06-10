@@ -14,15 +14,15 @@ Informations sur les outils technologiques utilisés pour le développement d'Ev
 
 ### Librairies et langages de programmation
 Interface de gestion web __(HTML/JS)__ :
-- [jQuery] - Accélère le développement JavaScript.
-- [Autobahn|JS] - Permet la communication [WAMP] avec JavaScript.
+ - [jQuery] - Accélère le développement JavaScript.
+ - [Autobahn|JS] - Permet la communication [WAMP] avec JavaScript.
 
 Fournisseur de services __(Python)__ :
-- [Autobahn|Python] - Fournit une couche supplémentaire permettant la communication [WAMP] à travers Twisted.
-- [Twisted] - Librairie permettant la communication réseau et fournissant un système de programmation asynchrone.
+ - [Autobahn|Python] - Fournit une couche supplémentaire permettant la communication [WAMP] à travers Twisted.
+ - [Twisted] - Librairie permettant la communication réseau et fournissant un système de programmation asynchrone.
 
 Serveur web __(Python)__ :
-- [Crossbar] - Fournit un serveur/routeur [WAMP] en Python.
+ - [Crossbar] - Fournit un serveur/routeur [WAMP] en Python.
 
 Installation et exécution
 -------------------------
@@ -68,7 +68,7 @@ Installation du logiciel client sous Windows :
  - Télécharger Python 2.7 32-bits : https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
  - Démarrer l'installation en prenant soin d'ajouter l'option **"Add python.exe to path"**
  - Par la ligne de commande, installer la librairie Autobahn|Python : 
-   ```cmd
+```cmd
 pip install autobahn[twisted]
 ```
  - Exécuter le fichier `main.py` du dossier b65cli. Si Python n'est pas associé aux fichiers .py, vous pouvez exécuter `python main.py` en ligne de commande. Les droits administratifs ne sont pas nécessaires, car la version Windows n'a aucun accès au matériel. 
