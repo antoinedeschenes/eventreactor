@@ -13,21 +13,27 @@ Informations sur les outils technologiques utilisés pour le développement d'Ev
 
 
 ### Librairies et langages de programmation
+
 Interface de gestion web __(HTML/JS)__ :
+
  - [jQuery] - Accélère le développement JavaScript.
  - [Autobahn|JS] - Permet la communication [WAMP] avec JavaScript.
 
 Fournisseur de services __(Python)__ :
+
  - [Autobahn|Python] - Fournit une couche supplémentaire permettant la communication [WAMP] à travers Twisted.
  - [Twisted] - Librairie permettant la communication réseau et fournissant un système de programmation asynchrone.
 
 Serveur web __(Python)__ :
+
  - [Crossbar] - Fournit un serveur/routeur [WAMP] en Python.
 
 Installation et exécution
 -------------------------
 ### Serveur
+
 Le serveur est déjà fonctionnel en ligne. Pour l'installer soi-même, voici les étapes d'installation pour [Ubuntu] :
+
 ```sh 
 # Installer les prérequis
 $ sudo apt-get install build-essential libssl-dev libffi-dev python-dev python-pip
@@ -44,10 +50,13 @@ $ cd b65serv
 # Démarrer le serveur crossbar
 $ crossbar start
 ```
+
 Note: Il est préférable d'exécuter le programme dans une session virtuelle `screen` pour que le programme fonctionne même lorsqu'on se déconnecte de notre session. Pour revenir à la session sur le  serveur, simplement exécuter `screen -R`.
 
 ### Client Raspberry Pi (Raspbian)
+
 Si vous avez un [Raspberry Pi] avec la distribution Raspbian, voici comment installer et exécuter le logiciel client :
+
 ```sh
 # Installer les prérequis 
 $ sudo apt-get install build-essential libssl-dev libffi-dev python-dev python-pip libi2c-dev i2c-tools
@@ -66,9 +75,10 @@ Note : Comme pour le serveur, une session `screen` est préférable.
 ###Client Windows
 
 Installation du logiciel client sous Windows :
- * Télécharger Python 2.7 32-bits : https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
- * Démarrer l'installation en prenant soin d'ajouter l'option **"Add python.exe to path"**
- * Par la ligne de commande, installer la librairie Autobahn|Python : 
+
+ - Télécharger Python 2.7 32-bits : https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
+ - Démarrer l'installation en prenant soin d'ajouter l'option **"Add python.exe to path"**
+ - Par la ligne de commande, installer la librairie Autobahn|Python : 
 
 ```cmd
 pip install autobahn[twisted]
