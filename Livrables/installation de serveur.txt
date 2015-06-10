@@ -1,9 +1,0 @@
-sudo apt-get install build-essential libssl-dev libffi-dev python-dev
-
-installer pip avec get-pip.py s'il n'est pas présent
-
-sudo pip install crossbar[all]
-
-sudo ufw allow 8080
-
-exécuter crossbar start à l'intérieur du dossier b65serv
