@@ -24,13 +24,16 @@ Informations sur les outils technologiques utilisés pour le développement d'Ev
 
 ### Librairies 
 
-JavaScript pour l'interface web
-- [jQuery] - **API** pour accélérer le développement JavaScript.
-- [Autobahn|JS] - **API** permettant 
+Interface de gestion web (HTML/JS) :
+- [jQuery] - Accélère le développement JavaScript.
+- [Autobahn|JS] - Permet la communication [WAMP] avec JavaScript.
 
-Python pour le fournisseur de services 
-- [Autobahn|Python] - 
-- [Twisted] - Librairie permettant la communication réseau et 
+Fournisseur de services (Python) :
+- [Autobahn|Python] - Fournit une couche supplémentaire permettant la communication [WAMP] à travers Twisted.
+- [Twisted] - Librairie permettant la communication réseau et fournissant un système de programmation asynchrone.
+
+Serveur web (Python) :
+- [Crossbar] - Fournit un serveur/routeur [WAMP] en Python.
 
 Installation
 ------------
@@ -64,9 +67,9 @@ $ karma start
 [Autobahn|Python]:http://autobahn.ws/python/
 [Twisted]:https://twistedmatrix.com/
 
-[JetBrains]:https://www.jetbrains.com/
+[Crossbar]:http://crossbar.io/
+
 [IntelliJ IDEA]:https://www.jetbrains.com/idea/
 [PhpStorm]:https://www.jetbrains.com/phpstorm/
 [PyCharm]:https://www.jetbrains.com/pycharm/
-
 
