@@ -64,6 +64,7 @@ $ sudo python main.py
 Note : Comme pour le serveur, une session `screen` est préférable.
 
 ###Client Windows
+
 Installation du logiciel client sous Windows :
  - Télécharger Python 2.7 32-bits : https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
  - Démarrer l'installation en prenant soin d'ajouter l'option **"Add python.exe to path"**
