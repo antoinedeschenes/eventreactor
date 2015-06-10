@@ -8,8 +8,8 @@ Outils technologiques
 Informations sur les outils technologiques utilisés pour le développement d'Event Reactor.
 
 ### Environnements de développement (**IDE**)
-- [PhpStorm] - **IDE** basé sur [IntelliJ IDEA] optimisé pour le web (PHP, JS, HTML5, CSS, etc.)
-- [PyCharm] - **IDE** basé sur [IntelliJ IDEA] optimisé pour Python
+ - [PhpStorm] - **IDE** basé sur [IntelliJ IDEA] optimisé pour le web (PHP, JS, HTML5, CSS, etc.)
+ - [PyCharm] - **IDE** basé sur [IntelliJ IDEA] optimisé pour Python
 
 
 ### Librairies et langages de programmation
