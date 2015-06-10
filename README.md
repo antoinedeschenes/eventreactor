@@ -68,9 +68,11 @@ Installation du logiciel client sous Windows :
  - Télécharger Python 2.7 32-bits : https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
  - Démarrer l'installation en prenant soin d'ajouter l'option **"Add python.exe to path"**
  - Par la ligne de commande, installer la librairie Autobahn|Python : 
+
 ```cmd
 pip install autobahn[twisted]
 ```
+
  - Exécuter le fichier `main.py` du dossier b65cli. Si Python n'est pas associé aux fichiers .py, vous pouvez exécuter `python main.py` en ligne de commande. Les droits administratifs ne sont pas nécessaires, car la version Windows n'a aucun accès au matériel. 
 
 Temps investi
