@@ -15,21 +15,22 @@ __atexit.register(__smbus.close)
 SENSOR_MCP9808 = 0
 SENSOR_TMP007 = 1
 
-
 def lire(sensor_type, adresse):
-    #Datasheet MCP9808 section 5.1.3.1
+    #Lecture sur I2C/SMBus et conversion en °C
     if sensor_type == SENSOR_MCP9808:
+        #Datasheet MCP9808 section 5.1.3.1
         t = __smbus.read_i2c_block_data(adresse, 0x05)
-        t = ((t[0] << 8) + t[1]) & 0x1FFF
-        t -= t & 0x1000
+        t = ((t[0] << 8) + t[1]) & 0x1FFF # Byte swap et masque
+        t -= t & 0x1000 # Température négative
         return t / 16.0
     elif sensor_type == SENSOR_TMP007:
+        #Datasheet TMP007
         t = __smbus.read_i2c_block_data(adresse, 0x03)
         t = ((t[0] << 8) + t[1])
-        if t & 0x8000: # Température négative
-            t -= 0x10000
+        #if t & 0x8000:
+        t -= 0x10000 # Température négative
 
-        if t & 0x0001:  # Bit d'erreur, cette valeur ne compte pas
+        if t & 0x0001:  # Bit d'erreur: invalider la lecture
             return None
         else:
             # 14 premiers bits contiennent la température en 32e de degrés

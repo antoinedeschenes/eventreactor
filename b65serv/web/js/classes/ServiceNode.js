@@ -1,3 +1,5 @@
+
+//Représentation d'un service côté page web. Construit le DOM approprié et contient les fonctions de rafraîchissement.
 function ServiceNode(parent, name) {
     var caller = this;
     this.parent = parent;
@@ -29,7 +31,7 @@ function ServiceNode(parent, name) {
     }, 500);
 }
 
-
+//Rafraîchit la configuration dans le DOM
 ServiceNode.prototype.refresh = function () {
     var caller = this;
     connection.session.call(this.parent.name + ".serv." + this.name).then(function (data) {
@@ -45,6 +47,7 @@ ServiceNode.prototype.refresh = function () {
     });
 };
 
+//Rafraîchit les données lues dans le DOM
 ServiceNode.prototype.refreshReadings = function () {
     var caller = this;
     connection.session.call(this.parent.name + ".serv." + this.name).then(function (data) {
@@ -59,12 +62,13 @@ ServiceNode.prototype.refreshReadings = function () {
     });
 };
 
-
+//Appelé de l'externe à la suppression du service.
 ServiceNode.prototype.erase = function () {
     this.node.remove();
     this.node = undefined;
 };
 
+//Appel du bouton "del" dans l'interface pour effacer ce service sur le fournisseur.
 ServiceNode.prototype.deleteFromProvider = function () {
     var calldata = { 'services':{}};
     calldata.services[this.name] = null;
@@ -72,6 +76,7 @@ ServiceNode.prototype.deleteFromProvider = function () {
     connection.session.call(this.parent.name + ".configure",[calldata]);
 };
 
+//Remplit l'éditeur de configuration avec les données courantes.
 ServiceNode.prototype.getServiceConfiguration = function() {
     var caller = this;
     connection.session.call(this.parent.name + ".serv." + this.name).then(function (data) {

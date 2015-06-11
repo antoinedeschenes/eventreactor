@@ -4,7 +4,7 @@ __author__ = 'Antoine Deschênes'
 import atexit as __atexit
 import RPi.GPIO as __gpiolib
 
-# Ouvrir le GPIO à l'importation - module singleton
+# Ouvrir le GPIO à l'importation - module à la 'singleton'
 __gpiolib.setmode(__gpiolib.BCM)
 
 # Libérer les GPIO à la fermeture
@@ -13,8 +13,8 @@ __atexit.register(__gpiolib.cleanup)
 GPIO_INPUT = 'I'
 GPIO_OUTPUT = 'O'
 
-
 def setup(numero, mode=None):
+    # Mettre en mode input, mode output ou libérer la GPIO.
     if mode == GPIO_INPUT:
         __gpiolib.setup(numero, __gpiolib.IN, pull_up_down=__gpiolib.PUD_DOWN)
     elif mode == GPIO_OUTPUT:
@@ -24,10 +24,8 @@ def setup(numero, mode=None):
 
 
 def pin(numero, state=None):
+    # Lecture, et optionnellement écriture si 'state' n'est pas vide et la pin est en OUTPUT.
     if (state is not None) and __gpiolib.gpio_function(numero) == __gpiolib.OUT:
         __gpiolib.output(numero, state)
 
-
-    current_state = __gpiolib.input(numero)
-
-    return current_state
+    return __gpiolib.input(numero)

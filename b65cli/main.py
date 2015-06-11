@@ -53,7 +53,9 @@ if __name__ == '__main__':
     transport_factory.setProtocolOptions(autoPingInterval=10.0, autoPingTimeout=5.0)
     websocket.connectWS(transport_factory)
 
+    print('Event Reactor: init complete')
+
     #Démarrer la boucle d'événements
     reactor.run()
 
-    print('Exit')
+    print('Event Reactor: exit')

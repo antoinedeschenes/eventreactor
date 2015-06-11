@@ -1,15 +1,21 @@
+//Infos de débogage dans la console
 AUTOBAHN_DEBUG = false;
 
+//URL de connexion et objet de connexion.
 var connectionurl = "ws://a.antoinedeschenes.com:8080/ws";
+var connection;
 
+
+//Dictionnaire d'objets Providers
 var providers = {};
+
+////Éléments du DOM souvent accédés.
 var servicesNode;
 var serviceEditNode;
 var eventsNode;
 var eventEditNode;
 
-var connection;
-
+//Chaînes de caractères de remplacement pour les valeurs reçues.
 var configstrings = {
     type: {
         1: 'i/o pin',
@@ -28,6 +34,7 @@ var configstrings = {
     }
 };
 
+//Suffixes d'unités pour les valeurs des données.
 var suffixdict = {
     temp: "°C",
     power: "W",
@@ -37,6 +44,7 @@ var suffixdict = {
     time: "s"
 };
 
+//Attributs de configuration et valeurs valides par services. Sert à construire le DOM de l'éditeur de services.
 var serviceconfigvalues = {
     1: {
         pin: {type:"enum", values:[5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]},

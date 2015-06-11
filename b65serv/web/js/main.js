@@ -1,19 +1,23 @@
 //Au chargement de la page, paramétrer les variables globales.
 $(function () {
+        //Créer les références sur les objets souvent utilisés.
         servicesNode = $('#services');
         serviceEditNode = $('#service-edit');
         eventsNode = $('#events');
         eventEditNode = $('#event-edit');
 
+        //Créer une connexion et ouvrir.
         connection = getConnection();
         connection.open();
     }
 );
 
-
+//Boucle de rafraîchissement
 function refresh() {
-    if (connection.session != null) {
+    if (connection.session != null) { //Si connecté
+        //Demander au serveur la liste de clients connectés
         connection.session.call("wamp.session.list").then(function (data) {
+            //Faire l'ajout et la suppression de providers selon la liste reçue.
             var toRemove = Object.keys(providers);
             for (var i = 0; i < data.length; i++) {
                 if (data[i] in providers)
@@ -25,11 +29,12 @@ function refresh() {
                 delProvider([toRemove[i]]);
         }, connection.session.log);
 
-
+        //Rafraîchir les lectures des providers existants.
         for (var i in providers) {
-            providers[i].refreshReadings();
+            providers[i].refresh();
         }
 
+        //Planifier un rappel à la fonction.
         setTimeout(refresh, 250);
     }
 }

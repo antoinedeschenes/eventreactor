@@ -1,6 +1,5 @@
-/**
- * Created by Antoine on 2015-04-04.
- */
+
+//Représentation d'un événement côté page web. Construit le DOM approprié et contient les fonctions de rafraîchissement.
 function EventNode(parent, name) {
     this.parent = parent;
     this.name = name;
@@ -23,6 +22,7 @@ function EventNode(parent, name) {
     setTimeout(function() { caller.refresh()}, 500);
 };
 
+//Rafraîchit la liste de réactions et la condition dans le DOM
 EventNode.prototype.refresh = function() {
     var caller = this;
     connection.session.call(this.parent.name + ".evt." + this.name).then(function(data) {
@@ -46,7 +46,7 @@ EventNode.prototype.refresh = function() {
     });
 };
 
-
+//Retourne l'état courant (si vrai ou faux)
 EventNode.prototype.refreshReadings = function () {
     var caller = this;
     connection.session.call(this.parent.name + ".evt." + this.name).then(function(data) {
@@ -63,11 +63,13 @@ EventNode.prototype.refreshReadings = function () {
 
 };
 
+//Appelé de l'externe pour effacer le DOM quand l'événement est supprimé.
 EventNode.prototype.erase = function() {
     this.node.remove();
     this.node = undefined;
 };
 
+//Effacer l'événement sur le fournisseur (bouton del sur l'interface)
 EventNode.prototype.deleteFromProvider = function () {
     var calldata = { 'events':{}};
     calldata.events[this.name] = null;
@@ -75,8 +77,8 @@ EventNode.prototype.deleteFromProvider = function () {
     connection.session.call(this.parent.name + ".configure",[calldata]);
 };
 
+//Remplit l'éditeur de config avec les données.
 EventNode.prototype.getEventConfiguration = function() {
-    var caller = this;
     connection.session.call(this.parent.name + ".evt." + this.name).then(function(data) {
         $('#event-condition-input').val(data.condition);
         var ontruelist = $('#event-true-reactions');
@@ -91,12 +93,14 @@ EventNode.prototype.getEventConfiguration = function() {
     });
 };
 
+//Reçoit la valeur d'affectation d'une réaction vraie lorsqu'elle est sélectionnée.
 EventNode.prototype.getTrueReactionValue = function(attribute) {
     connection.session.call(this.parent.name + ".evt." + this.name).then(function(data) {
         $('#true-value').val(data.onTrue[attribute]);
     });
 };
 
+//Reçoit la valeur d'affectation d'une réaction fausse lorsqu'elle est sélectionnée.
 EventNode.prototype.getFalseReactionValue = function(attribute) {
     connection.session.call(this.parent.name + ".evt." + this.name).then(function(data) {
         $('#false-value').val(data.onFalse[attribute]);

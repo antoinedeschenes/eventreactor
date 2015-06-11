@@ -1,19 +1,22 @@
 function Provider(name, sessionkey) {
     this.name = name;
 
-    var caller = this; //Faire avec les problèmes de namespace...
-
+    //Listes d'objets ServiceNode et EventNode
     this.services = {};
     this.events = {};
 
+    //S'ajouter aux listes de fournisseurs dans les éditeurs d'événements et réactions.
     this.listnode = $('<option>', {value: sessionkey, text: this.name}).appendTo($('.provider-select'));
 
+    var caller = this;
     setTimeout(function () {
-        caller.refreshReadings();
+        caller.refresh();
     }, 500);
 }
 
-Provider.prototype.refreshReadings = function () {
+// Reçoit la structure d'un fournisseur de services
+// et ajoute ou supprime les services et événements qui s'ajoutent ou sont effacés.
+Provider.prototype.refresh = function () {
     var provider = this;
     connection.session.call(this.name + ".structure", []).then(function (structure) {
             var services = structure["services"]
@@ -45,6 +48,7 @@ Provider.prototype.refreshReadings = function () {
         }
     );
 
+    //Rafraichir les lectures des services et evenements.
     for (var key in this.services) {
         this.services[key].refreshReadings();
     }
@@ -64,11 +68,12 @@ Provider.prototype.erase = function () {
     this.listnode.remove();
 };
 
+//Lorsqu'on sauvegarde une config avec un des éditeurs de config
 Provider.prototype.configure = function(config) {
     //Envoie l'objet de configuration au provider.
-    console.log(config)
     connection.session.call(this.name + ".configure", [config]);
     var caller = this;
+    //Demander un rafraichissement général des config
     setTimeout(function(){
         for (var key in caller.services) {
             caller.services[key].refresh();

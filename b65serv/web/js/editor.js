@@ -1,3 +1,5 @@
+
+//Remplir la liste de choix d'événements ou de services selon le cas.
 function selectProvider(e) {
     var source = e.target.id;
     var selectedvalue = e.target.value;
@@ -19,6 +21,7 @@ function selectProvider(e) {
         $('<option>', {text: list[i]}).appendTo(datalist);
 }
 
+//Charger un service existant dans l'éditeur
 function selectService() {
     var selectedprovider = $('#service-provider-select').val();
     var selectedservice = $('#service-name-input').val();
@@ -27,6 +30,7 @@ function selectService() {
     }
 }
 
+//Afficher les boîtes appropriées selon le type de service dans l'éditeur de services.
 function selectServiceType() {
     var selectedservicetype = $('#service-type-select').val();
     var listofconfigs = serviceconfigvalues[selectedservicetype];
@@ -58,6 +62,7 @@ function selectServiceType() {
     }
 }
 
+//Remplir la condition d'événement et la liste des réactions dans l'éditeur d'événements
 function selectEvent() {
     var selectedprovider = $('#event-provider-select').val();
     var selectedevent = $('#event-name-input').val();
@@ -66,6 +71,7 @@ function selectEvent() {
     }
 }
 
+//Choisir une réaction vraie et envoyer la valeur dans la boîte input si elle existe déjà
 function selectTrueReaction() {
     var selectedprovider = $('#event-provider-select').val();
     var selectedevent = $('#event-name-input').val();
@@ -75,6 +81,7 @@ function selectTrueReaction() {
     }
 }
 
+//Choisir une réaction fausse et envoyer la valeur dans la boîte input si elle existe déjà
 function selectFalseReaction() {
     var selectedprovider = $('#event-provider-select').val();
     var selectedevent = $('#event-name-input').val();
@@ -84,6 +91,7 @@ function selectFalseReaction() {
     }
 }
 
+//Vider l'éditeur de services
 function clearServiceEditor() {
     $('#service-provider-select').val('');
     $('#service-name-input').val('');
@@ -93,6 +101,7 @@ function clearServiceEditor() {
     $('#service-value-list').empty();
 }
 
+//Vider l'éditeur d'événements
 function clearEventEditor() {
     $('#event-provider-select').val('');
     $('#event-name-input').val('');
@@ -106,6 +115,7 @@ function clearEventEditor() {
     $('#false-value').val('');
 }
 
+//Envoyer une config de service
 function saveService() {
     var selectedprovider = $('#service-provider-select').val();
     var selectedservice = $('#service-name-input').val().trim().toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -127,6 +137,7 @@ function saveService() {
 
 }
 
+//Envoyer une config de réaction d'événement
 function saveCondition() {
     var selectedprovider = $('#event-provider-select').val();
     var selectedevent = $('#event-name-input').val().trim().toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -137,13 +148,14 @@ function saveCondition() {
         configtosend.events[selectedevent] = {condition: newcondition};
         providers[selectedprovider].configure(configtosend);
     }
+    selectEvent();
 }
 
-
+//Envoyer une config de réaction sur événement de condition vraie
 function saveTrueReaction() {
     var selectedprovider = $('#event-provider-select').val();
     var selectedevent = $('#event-name-input').val().trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-    var selectedattribute = $('#true-attribute').val().trim().toLowerCase().replace(/[^a-z0-9.]/g, '');
+    var selectedattribute = $('#true-attribute').val().trim().replace(/[^A-Za-z0-9.\-]/g, '');
     var newvalue = convertString($('#true-value').val());
 
     if (selectedprovider.length > 0 && selectedevent.length > 0 && selectedattribute.length > 0) {
@@ -152,12 +164,14 @@ function saveTrueReaction() {
         configtosend.events[selectedevent].onTrue[selectedattribute] = newvalue;
         providers[selectedprovider].configure(configtosend);
     }
+    selectEvent();
 }
 
+//Envoyer une config de réaction sur événement de condition fausse
 function saveFalseReaction() {
     var selectedprovider = $('#event-provider-select').val();
     var selectedevent = $('#event-name-input').val().trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-    var selectedattribute = $('#false-attribute').val().trim().toLowerCase().replace(/[^a-z0-9.]/g, '');
+    var selectedattribute = $('#false-attribute').val().trim().replace(/[^A-Za-z0-9.\-]/g, '');
     var newvalue = convertString($('#false-value').val());
 
     if (selectedprovider.length > 0 && selectedevent.length > 0 && selectedattribute.length > 0) {
@@ -166,9 +180,10 @@ function saveFalseReaction() {
         configtosend.events[selectedevent].onFalse[selectedattribute] = newvalue;
         providers[selectedprovider].configure(configtosend);
     }
+    selectEvent();
 }
 
-
+//Transformer les strings lus en DOM en nombres s'ils contiennent que des nombres
 function convertString(value) {
     if (typeof value == 'string')
         value = value.trim();

@@ -5,7 +5,7 @@ __author__ = 'Antoine Deschênes'
 
 from eventreactor.event.reaction import Reaction
 
-
+# Génère les événements et appelle les réactions lorsque la condition change.
 class Event(object):
     def __init__(self, provider, config):
         self.provider = provider
@@ -20,6 +20,7 @@ class Event(object):
         self.configure(config)
 
     def configure(self, new_config):
+        # Fonction pour la configuration initiale ou subséquente d'un événement.
 
         # Pour appliquer les réactions créées après que l'événement se soit produit
         execute_reaction = self.config["lastState"]
@@ -69,8 +70,10 @@ class Event(object):
 
     @inlineCallbacks
     def refresh(self):
+        #Vérifier l'état de la condition
         new_state = yield self.provider.helper.parsecondition(self.config["condition"])
 
+        # Si la réponse passe vers True ou vers False, appeler les réactions
         if (self.config["lastState"] is None and new_state is not None) or self.config["lastState"] != new_state:
             if new_state is True:
                 for reaction in self.onTrue:
@@ -88,4 +91,5 @@ class Event(object):
             self.config["lastState"] = new_state
 
     def access(self):
+        "Retourne la config courante"
         return self.config

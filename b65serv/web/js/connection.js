@@ -1,5 +1,6 @@
 
-//Génère et paramètre un objet connection.
+
+//Génère, paramètre et retourne un objet connection.
 function getConnection() {
     var connection = new autobahn.Connection({
         url: connectionurl,
@@ -12,12 +13,12 @@ function getConnection() {
     return connection;
 }
 
-//Retourner le mot de passe pour l'authentification
+//Fonction poru Autobahn qui sert à retourner le mot de passe pour l'authentification
 function onchallenge(session, method, extra) {
     return autobahn.auth_cra.sign("secret", extra.challenge);
 }
 
-//Connexion réussie
+//Actions à faire lors d'une connexion réussie.
 function onopen(session, details) {
     //Ajouter des inscriptions aux méthodes qui publient l'ajout et la suppression de clients au serveur
     session.subscribe('wamp.session.on_join', addProvider);
