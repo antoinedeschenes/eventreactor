@@ -8,6 +8,7 @@ from .service import Service
 class GPIO(Service):
     GPIO_INPUT = dao.gpio.GPIO_INPUT
     GPIO_OUTPUT = dao.gpio.GPIO_OUTPUT
+    GPIO_PWM = dao.gpio.GPIO_PWM
 
     def __init__(self, config):
         super(GPIO, self).__init__(config)

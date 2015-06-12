@@ -16,6 +16,11 @@ function selectProvider(e) {
         datalist = $('#event-datalist');
     }
 
+    fillSelect(list, datalist);
+}
+
+//Remplit une datalist dans le DOM avec une liste
+function fillSelect(list, datalist) {
     datalist.empty();
     for (var i in list)
         $('<option>', {text: list[i]}).appendTo(datalist);
@@ -149,6 +154,9 @@ function saveCondition() {
         providers[selectedprovider].configure(configtosend);
     }
     selectEvent();
+    var list = Object.keys(providers[selectedprovider].events);
+    var datalist = $('#event-datalist');
+    fillSelect(list, datalist);
 }
 
 //Envoyer une config de réaction sur événement de condition vraie
@@ -165,6 +173,9 @@ function saveTrueReaction() {
         providers[selectedprovider].configure(configtosend);
     }
     selectEvent();
+    var list = Object.keys(providers[selectedprovider].events);
+    var datalist = $('#event-datalist');
+    fillSelect(list, datalist);
 }
 
 //Envoyer une config de réaction sur événement de condition fausse
@@ -181,6 +192,9 @@ function saveFalseReaction() {
         providers[selectedprovider].configure(configtosend);
     }
     selectEvent();
+    var list = Object.keys(providers[selectedprovider].events);
+    var datalist = $('#event-datalist');
+    fillSelect(list, datalist);
 }
 
 //Transformer les strings lus en DOM en nombres s'ils contiennent que des nombres

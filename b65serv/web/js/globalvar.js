@@ -26,7 +26,8 @@ var configstrings = {
     },
     mode: {
         I: 'input',
-        O: 'output'
+        O: 'output',
+        P: 'pwm'
     },
     sensorType: {
         0: 'mcp9808 (direct)',
@@ -47,8 +48,8 @@ var suffixdict = {
 //Attributs de configuration et valeurs valides par services. Sert à construire le DOM de l'éditeur de services.
 var serviceconfigvalues = {
     1: {
-        pin: {type:"enum", values:[5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]},
-        mode: {type:"enum", values:['I', 'O']}
+        pin: {type:"enum", values:[5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]},
+        mode: {type:"enum", values:['I', 'O', 'P']}
     },
     2: {
         sensorType: {type:"enum", values:[0, 1]},

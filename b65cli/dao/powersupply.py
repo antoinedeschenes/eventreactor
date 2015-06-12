@@ -2,10 +2,9 @@
 __author__ = 'Antoine Deschênes'
 
 import atexit as __atexit
-
 import serial as __serial
-
 import time as __time
+import os as __os
 
 #Accès au powersupply B&K 1687B par le port série.
 
@@ -32,6 +31,9 @@ __atexit.register(shutdown)
 def connect(port='/dev/ttyUSB0', baud=9600):
     "Vérifier si la connexion est déjà ouverte, sinon ouvrir."
     global __comm
+    if not __os.path.exists(port):
+        raise Exception('PortDoesNotExist')
+
     if __comm is None or not __comm.isOpen():
         try:
             __comm = __serial.Serial(port, baud, parity=__serial.PARITY_NONE, stopbits=__serial.STOPBITS_ONE, timeout=0.25, writeTimeout=0.25)
@@ -81,8 +83,10 @@ def on():
     '0 pour allumer'
     global __curr_state
     if __curr_state != 0:
-        while __call('SOUT0') is None: # Tant que le PSU ne répond pas correctement
+        count = 0
+        while __call('SOUT0') is None and count < 5 : # Si le PSU ne répond pas correctement, 5 essais
             __time.sleep(DELAY) # Attendre et recommencer
+            count +=1
         __curr_state = 0
 
 # Shutdown on - donc OFF
@@ -92,12 +96,18 @@ def off():
     global __curr_volt
     global __curr_state
     if __curr_state != 1: #Si pas déjà fermé
-        while __call('SOUT1') is None: #Shutdown
+        count = 0
+        while __call('SOUT1') is None and count < 5: #Shutdown
             __time.sleep(DELAY)
-        while __call('VOLT000') is None: #Reset voltage à zero
+            count += 1
+        count = 0
+        while __call('VOLT000') is None and count < 5: #Reset voltage à zero
             __time.sleep(DELAY)
-        while __call('CURR000') is None: #Reset courant à zéro
+            count += 1
+        count = 0
+        while __call('CURR000') is None and count < 5: #Reset courant à zéro
             __time.sleep(DELAY)
+            count += 1
         __curr_current = 0
         __curr_volt = 0
         __curr_state = 1
@@ -105,9 +115,11 @@ def off():
 def state(): #Retourne si on ou off
     '1 pour actif, 0 pour inactif'
     state = __call('GOUT')
-    while state is None:
+    count = 0
+    while state is None and count < 5:
         __time.sleep(DELAY)
         state = __call('GOUT')
+        count += 1
     return 1 - state
 
 def set_clamp(volt, curr):
@@ -119,17 +131,34 @@ def set_clamp(volt, curr):
     volt = int(volt * 10)
     curr = int(curr * 10)
 
-    __curr_ovp = volt
-    __curr_ocp = curr
 
-    max = int(__call('GMAX'))
+    max = __call('GMAX')
+    count = 0
+    while max is None and count < 5:
+        max = __call('GMAX')
+        count += 1
+
+    if max is not None:
+        max = int(max)
+    else:  # Power supply ne communique pas - ne pas faire planter pour être capable d'effacer le service par le web
+        max = 0
+        volt = 0
+        curr = 0
+
     if volt <= (max / 1000):
-        while __call('SOVP' + str(volt).zfill(3)) is None:
+        count = 0
+        while __call('SOVP' + str(volt).zfill(3)) is None and count < 5:
             __time.sleep(DELAY)
+            count += 1
+    __curr_ovp = volt
 
     if curr <= (max % 1000):
-        while __call('SOCP' + str(curr).zfill(3)) is None:
+        count = 0
+        while __call('SOCP' + str(curr).zfill(3)) is None and count < 5:
             __time.sleep(DELAY)
+            count += 1
+    __curr_ocp = curr
+
 
 def get_status():
     'Retourne voltage, courant et si la sortie est limitée par la tension ou le courant'
