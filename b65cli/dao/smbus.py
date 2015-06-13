@@ -27,8 +27,8 @@ def lire(sensor_type, adresse):
         #Datasheet TMP007
         t = __smbus.read_i2c_block_data(adresse, 0x03)
         t = ((t[0] << 8) + t[1])
-        #if t & 0x8000:
-        t -= 0x10000 # Température négative
+        if t & 0x8000:
+            t -= 0x10000 # Température négative
 
         if t & 0x0001:  # Bit d'erreur: invalider la lecture
             return None
