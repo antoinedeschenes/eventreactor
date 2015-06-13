@@ -92,16 +92,6 @@ pip install autobahn[twisted]
 
  - Exécuter le fichier `main.py` du dossier b65cli. Si Python n'est pas associé aux fichiers .py, vous pouvez exécuter `python main.py` en ligne de commande. Les droits administratifs ne sont pas nécessaires, car la version Windows n'a aucun accès au matériel. 
 
-Temps investi
--------------
-
-
-Coordonnées
------------
-Pour me contacter par courriel : antoine@antoinedeschenes.com
-
-
-<!-- Sites en références -->
 
 [Event Reactor]:https://bitbucket.org/antoinedeschenes/eventreactor
 
