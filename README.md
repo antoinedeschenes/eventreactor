@@ -1,9 +1,13 @@
 ﻿Event Reactor
 =============
 
-[Event Reactor] est un ensemble d'applications permettant la programmation d'événements et de réactions en temps réel à partir d'une interface web. Le plus intéressant est de l'utiliser sur un ou plusieurs [Raspberry Pi] : on peut, par exemple, utiliser les données de thermomètre et de boutons pour générer des événements, tel qu'allumer une lumière, faire sonner un haut-parleur ou contrôler un bloc d'alimentation. 
+[Event Reactor] est un ensemble d'applications permettant l'automatisation d'événements à partir de données collectées continuellement.
 
-Le logiciel qui fait les lectures et produit les événements (fournisseur de services) se connecte sur un serveur en ligne. Le serveur permet de distribuer les appels entre les fournisseurs de services, et héberge une page web qui permet de tout configurer. La communication se fait par un protocole libre nommé [WAMP] (Web Application Messaging Protocol) qui est basé sur le protocole _WebSocket_. Les appels se font donc autant en _push_ qu'en _pull_ à travers le web. 
+Le plus intéressant est de l'utiliser sur un ou plusieurs [Raspberry Pi] : on peut, par exemple, utiliser les données de thermomètre et de boutons pour générer des événements, tel qu'allumer une lumière, faire sonner un haut-parleur ou contrôler un bloc d'alimentation.
+
+Le logiciel qui fait les lectures et produit les événements (fournisseur de services) se connecte sur un serveur en ligne. Le serveur permet de distribuer les appels entre les fournisseurs de services et héberge une page web qui permet de tout configurer.
+
+La communication se fait par un protocole libre nommé [WAMP] (Web Application Messaging Protocol) qui est basé sur le protocole WebSocket. Les appels se font donc autant en _push_ qu'en _pull_ à travers le web.
 
 Outils technologiques
 ---------------------
